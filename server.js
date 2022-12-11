@@ -1,8 +1,21 @@
+// Use env
+require('dotenv').config();
+
 // Use Express
 const express = require("express");
 
+// Use Mongoose
+const mongo = require("mongoose");
+mongo.set('strictQuery', true);
+
 // Use body-parser
 const bodyParser = require("body-parser");
+
+// Connect to mongoDB
+const db = mongo
+  .connect(process.env.URL_DB, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => console.log("Connexion à MongoDB réussie !"))
+  .catch((err) => console.log("Connexion à MongoDB echouee " + err));
 
 // Create new instance of the express server
 const app = express();
@@ -20,5 +33,5 @@ app.get("/api/status", function (req, res) {
 });
 
 app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`)
-})
+  console.log(`Example app listening on port ${port}`);
+});
