@@ -93,8 +93,9 @@ async function getSummonerByName(req, res) {
         const jsonRiot = await resRiot.json();
         jsonRiot.name = jsonRiot.name.toLowerCase();
         res.status(200).json(jsonRiot);
-        modelSummoner.collection.insertOne(jsonRiot, (res, err) => {
+        await modelSummoner.collection.insertOne(jsonRiot, (err, result) => {
           console.log("Inserted")
+          console.log(result)
         });
       } catch (err) {
         console.error(err.message);
