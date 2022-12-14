@@ -30,19 +30,68 @@ const router = express.Router();
 // Routes api
 const routes = [];
 
-/*  "/api/status"
- *   GET: Get server status
- *   PS: it's just an example, not mandatory
- */
 
 const getStatus = (req, res) => {
   res.status(200).json("Status up");
 }
-router.get("/status", getStatus);
+/**
+ * GET: Get server status
+ */
+app.get("/api/status", getStatus);
 
 
-routes.push(getStatus);
+/**
+ * Create Schema Summoner for MongoDb
+ */
+const schemaSummoner = new mongoose.Schema({
+  id: {
+    type: String,
+    required: true
+  },
+  accountId: {
+    type: String,
+    required: true
+  },
+  name: {
+    type: String,
+    required: true
+  },
+  puuid: {
+    type: String,
+    required: true
+  },
+  summonerLevel: {
+    type: Number,
+    required: true
+  },
+  revisionDate: {
+    type: Number,
+    required: true
+  },
+  profileIconId: {
+    type: Number,
+    required: true
+  }
+});
 
+
+const modelSummoner = mongoose.model('Summoner', schemaSummoner);
+
+const getSummonerByName = async (req, res) => {
+  try {
+    const name = req.params.name;
+    const summoner = await modelSummoner.findOne({name: name});
+    if (null === summoner) {
+      console.log("Call api riot")
+    }
+    res.json(summoner);
+  } catch (err) {
+    res.status(500).json({message: err.message})
+  }
+}
+router.get("/summoner/:name", getSummonerByName);
+
+routes.push(getSummonerByName);
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port} http://localhost:${port}`);
@@ -50,4 +99,4 @@ app.listen(port, () => {
 
 app.use(express.json());
 
-app.use('/api/', routes)
+app.use('/api/summoner', routes)
