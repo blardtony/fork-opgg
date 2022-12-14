@@ -4,6 +4,9 @@ require('dotenv').config();
 // Use Express
 const express = require("express");
 
+// Use node-fetch
+const fetch = require('node-fetch');
+
 // Create new instance of the express server
 const app = express();
 
