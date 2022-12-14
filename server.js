@@ -4,34 +4,50 @@ require('dotenv').config();
 // Use Express
 const express = require("express");
 
-// Use Mongoose
-const mongo = require("mongoose");
-mongo.set('strictQuery', true);
-
-// Use body-parser
-const bodyParser = require("body-parser");
-
-// Connect to mongoDB
-const db = mongo
-  .connect(process.env.URL_DB, { useNewUrlParser: true, useUnifiedTopology: true })
-  .then(() => console.log("Connexion à MongoDB réussie !"))
-  .catch((err) => console.log("Connexion à MongoDB echouee " + err));
-
 // Create new instance of the express server
 const app = express();
 
+// Define port
 const port = 3000;
 
-app.use(bodyParser.json());
+// Use Mongoose
+const mongoose = require("mongoose");
+
+// Connect to mongoDB
+mongoose.set('strictQuery', true);
+
+mongoose.connect(process.env.URL_DB, { useNewUrlParser: true, useUnifiedTopology: true });
+
+const db = mongoose.connection;
+
+db.on('error', (error) => console.error(error));
+
+db.once('open', () => console.log('Connected to database'))
+
+// Use Router
+const router = express.Router();
+
+// Routes api
+const routes = [];
 
 /*  "/api/status"
  *   GET: Get server status
  *   PS: it's just an example, not mandatory
  */
-app.get("/api/status", function (req, res) {
-  res.status(200).json({ status: "UP" });
-});
+
+const getStatus = (req, res) => {
+  res.status(200).json("Status up");
+}
+router.get("/status", getStatus);
+
+
+routes.push(getStatus);
+
 
 app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`);
+  console.log(`Example app listening on port ${port} http://localhost:${port}`);
 });
+
+app.use(express.json());
+
+app.use('/api/', routes)
