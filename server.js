@@ -5,7 +5,8 @@ require('dotenv').config();
 const express = require("express");
 
 // Use node-fetch
-const fetch = require('node-fetch');
+const fetch = (...args) =>
+  import('node-fetch').then(({default: fetch}) => fetch(...args));
 
 // Create new instance of the express server
 const app = express();
@@ -26,12 +27,6 @@ const db = mongoose.connection;
 db.on('error', (error) => console.error(error));
 
 db.once('open', () => console.log('Connected to database'))
-
-// Use Router
-const router = express.Router();
-
-// Routes api
-const routes = [];
 
 
 const getStatus = (req, res) => {
@@ -80,21 +75,24 @@ const schemaSummoner = new mongoose.Schema({
 
 const modelSummoner = mongoose.model('Summoner', schemaSummoner);
 
-const getSummonerByName = async (req, res) => {
+async function getSummonerByName (req, res) {
   try {
     const name = req.params.name;
     const summoner = await modelSummoner.findOne({name: name});
     if (null === summoner) {
-      console.log("Call api riot")
+      try {
+        const resRiot = await fetch(process.env.URL_RIOT_SUOMMNER_BY_NAME + name + '?api_key=' + process.env.API_KEY_RIOT)
+        const jsonRiot = await resRiot.json();
+        res.status(200).json(jsonRiot)
+      }catch (err) {
+        console.error(err.message)
+      }
     }
-    res.json(summoner);
   } catch (err) {
     res.status(500).json({message: err.message})
   }
 }
-router.get("/summoner/:name", getSummonerByName);
-
-routes.push(getSummonerByName);
+app.get("/api/summoner/:name", getSummonerByName);
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port} http://localhost:${port}`);
@@ -102,4 +100,3 @@ app.listen(port, () => {
 
 app.use(express.json());
 
-app.use('/api/summoner', routes)
