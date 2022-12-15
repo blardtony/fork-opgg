@@ -17,9 +17,9 @@ const port = 3000;
 // Use Mongoose
 const mongoose = require("mongoose");
 
-// Connect to mongoDB
 mongoose.set("strictQuery", true);
 
+// Connect to mongoDB
 mongoose.connect(process.env.URL_DB, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -90,15 +90,22 @@ async function getSummonerByName(req, res) {
             "?api_key=" +
             process.env.API_KEY_RIOT
         );
-        const jsonRiot = await resRiot.json();
-        jsonRiot.name = jsonRiot.name.toLowerCase();
-        res.status(200).json(jsonRiot);
-        await modelSummoner.collection.insertOne(jsonRiot, (err, result) => {
-          console.log("Inserted")
-          console.log(result)
-        });
+        if (resRiot.status === 404) {
+          res.status(404).json({message: "Not found"});
+        }
+        else {
+          const jsonRiot = await resRiot.json();
+
+          jsonRiot.name = jsonRiot.name.toLowerCase();
+
+          res.status(200).json(jsonRiot);
+
+          await modelSummoner.collection.insertOne(jsonRiot, (err, result) => {
+            console.log(result)
+          });
+        }
       } catch (err) {
-        console.error(err.message);
+        res.status(500).json({ message: err.message });
       }
     } else {
       res.status(200).json(summoner);
