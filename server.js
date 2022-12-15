@@ -14,6 +14,11 @@ const app = express();
 // Define port
 const port = 3000;
 
+app.use(function (req, res, next) {
+  res.setHeader('Access-Control-Allow-Origin', 'http://localhost:4200');
+  next();
+});
+
 // Use Mongoose
 const mongoose = require("mongoose");
 
@@ -95,7 +100,6 @@ async function getSummonerByName(req, res) {
         }
         else {
           const jsonRiot = await resRiot.json();
-
           jsonRiot.name = jsonRiot.name.toLowerCase();
 
           getRankById(jsonRiot.id, res);
