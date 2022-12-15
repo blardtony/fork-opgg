@@ -98,7 +98,8 @@ async function getSummonerByName(req, res) {
 
           jsonRiot.name = jsonRiot.name.toLowerCase();
 
-          res.status(200).json(jsonRiot);
+          getRankById(jsonRiot.id, res);
+          // res.status(200).json(jsonRiot.id);
 
           await modelSummoner.collection.insertOne(jsonRiot, (err, result) => {
             console.log(result)
@@ -108,12 +109,38 @@ async function getSummonerByName(req, res) {
         res.status(500).json({ message: err.message });
       }
     } else {
-      res.status(200).json(summoner);
+      getRankById(summoner.id, res);
+      // res.status(200).json(summoner.id);
     }
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
 }
+
+
+async function getRankById(id, res) {
+      try {
+        console.log(id)
+        const resRiot = await fetch(
+          process.env.URL_RIOT_RANK_BY_ID +
+            id +
+            "?api_key=" +
+            process.env.API_KEY_RIOT
+        );
+        if (resRiot.status === 404) {
+          res.status(404).json({message: "Not found"});
+        }
+        else {
+          const jsonRiot = await resRiot.json();
+
+          res.status(200).json(jsonRiot);
+      }
+    } catch (err) {
+      console.log(err)
+    }
+  
+}
+
 app.get("/api/summoner/:name", getSummonerByName);
 
 app.listen(port, () => {
