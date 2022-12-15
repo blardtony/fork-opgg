@@ -9,6 +9,8 @@ import { HomeComponent } from './pages/home/home.component';
 import { SearchBarComponent } from './atoms/search-bar/search-bar.component';
 import { ProfileComponent } from './pages/profile/profile.component';
 import { ProfileCardComponent } from './atoms/profile-card/profile-card.component';
+import {SummonerService} from "./service/summoner.service";
+import {HttpClientModule} from "@angular/common/http";
 
 @NgModule({
   declarations: [
@@ -22,9 +24,10 @@ import { ProfileCardComponent } from './atoms/profile-card/profile-card.componen
     BrowserModule,
     AppRoutingModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    HttpClientModule
   ],
-  providers: [],
+  providers: [SummonerService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
