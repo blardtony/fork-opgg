@@ -7,8 +7,14 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ProfileComponent implements OnInit {
 
-  constructor() { }
-
+  tier : String;
+  lp : Number;
+  imgPath: String;
+  constructor() {
+    this.tier = "Silver 4";
+    this.lp = 15;
+    this.imgPath="https://opgg-static.akamaized.net/images/medals_new/silver.png?image=q_auto,f_webp,w_144&v=1670665277508";
+  }
   ngOnInit(): void {
   }
 
