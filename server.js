@@ -71,6 +71,14 @@ const schemaSummoner = new mongoose.Schema({
     type: Number,
     required: true,
   },
+  tier: {
+    type: String,
+    required: true
+  },
+  rank: {
+    type: String,
+    required: true
+  }
 });
 
 const modelSummoner = mongoose.model("Summoner", schemaSummoner, "Summoner");
@@ -98,7 +106,7 @@ async function getSummonerByName(req, res) {
 
           jsonRiot.name = jsonRiot.name.toLowerCase();
 
-          getRankById(jsonRiot.id, res);
+          getRankById(jsonRiot, res);
           // res.status(200).json(jsonRiot.id);
 
           await modelSummoner.collection.insertOne(jsonRiot, (err, result) => {
@@ -109,8 +117,8 @@ async function getSummonerByName(req, res) {
         res.status(500).json({ message: err.message });
       }
     } else {
-      getRankById(summoner.id, res);
-      // res.status(200).json(summoner.id);
+      // getRankById(summoner.id, res);
+      res.status(200).json(summoner);
     }
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -118,12 +126,11 @@ async function getSummonerByName(req, res) {
 }
 
 
-async function getRankById(id, res) {
+async function getRankById(jsonRiot, res) {
       try {
-        console.log(id)
         const resRiot = await fetch(
           process.env.URL_RIOT_RANK_BY_ID +
-            id +
+            jsonRiot.id +
             "?api_key=" +
             process.env.API_KEY_RIOT
         );
@@ -131,7 +138,16 @@ async function getRankById(id, res) {
           res.status(404).json({message: "Not found"});
         }
         else {
-          const jsonRiot = await resRiot.json();
+          const _jsonRiot = await resRiot.json();
+
+          jsonRiot["rank"] = _jsonRiot[0].rank
+          jsonRiot["tier"] = _jsonRiot[0].tier
+
+          console.log(jsonRiot)
+
+          await modelSummoner.collection.insertOne(jsonRiot, (err, result) => {
+            console.log(result)
+          });
 
           res.status(200).json(jsonRiot);
       }
