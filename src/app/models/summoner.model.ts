@@ -7,7 +7,8 @@ export class Summoner {
     public revisionDate: number,
     public summonerLevel: number,
     public rank: string,
-    public tier: string
+    public tier: string,
+    public leaguePoints: number
   ) {
   }
 }
