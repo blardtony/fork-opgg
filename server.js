@@ -83,6 +83,10 @@ const schemaSummoner = new mongoose.Schema({
   rank: {
     type: String,
     required: true
+  },
+  leaguePoints: {
+    type: Number,
+    required: true
   }
 });
 
@@ -113,8 +117,12 @@ async function getSummonerByName(req, res) {
           const summonerLeagueDetail = await getRankById(jsonRiot.id);
           console.log(summonerLeagueDetail);
           const summonerRanked5vs5 = summonerLeagueDetail.find(({queueType}) => queueType === "RANKED_SOLO_5x5")
-          jsonRiot.tier = summonerRanked5vs5.length !== 0 ? summonerRanked5vs5.tier : "unknown"
-          jsonRiot.rank = summonerRanked5vs5.length !== 0 ? summonerRanked5vs5.rank : "unknown"
+
+          const checkSummonerRanked = (summonerRanked5vs5 !== undefined && summonerRanked5vs5.length !== 0)
+          jsonRiot.tier = checkSummonerRanked ? summonerRanked5vs5.tier : "unknown"
+          jsonRiot.rank = checkSummonerRanked ? summonerRanked5vs5.rank : "unknown"
+          jsonRiot.leaguePoints = checkSummonerRanked ? summonerRanked5vs5.leaguePoints : 0
+
           res.status(200).json(jsonRiot);
           await modelSummoner.collection.insertOne(jsonRiot, (err, result) => {
             console.log(result)
