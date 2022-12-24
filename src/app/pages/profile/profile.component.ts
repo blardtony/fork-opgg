@@ -16,7 +16,7 @@ export class ProfileComponent implements OnInit {
   summoner : Summoner | undefined;
   constructor(private summonerService : SummonerService, private route: ActivatedRoute) {
     this.rankTier = "";
-    this.lp = 15;
+    this.lp = 0;
     this.imgPath="https://opgg-static.akamaized.net/images/medals_new/silver.png?image=q_auto,f_webp,w_144&v=1670665277508";
   }
   ngOnInit(): void {
@@ -24,6 +24,7 @@ export class ProfileComponent implements OnInit {
     this.summonerService.getSummonerByName(name).subscribe(summoner => {
       this.summoner = summoner
       this.rankTier = this.summoner.tier + " " + this.summoner.rank
+      this.lp = this.summoner.leaguePoints
     })
   }
 
