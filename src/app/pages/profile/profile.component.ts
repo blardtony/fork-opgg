@@ -10,18 +10,21 @@ import {ActivatedRoute} from "@angular/router";
 })
 export class ProfileComponent implements OnInit {
 
-  tier : String;
+  rankTier : String;
   lp : Number;
   imgPath: String;
   summoner : Summoner | undefined;
   constructor(private summonerService : SummonerService, private route: ActivatedRoute) {
-    this.tier = "Silver 4";
+    this.rankTier = "";
     this.lp = 15;
     this.imgPath="https://opgg-static.akamaized.net/images/medals_new/silver.png?image=q_auto,f_webp,w_144&v=1670665277508";
   }
   ngOnInit(): void {
     const name : string = this.route.snapshot.params['name'];
-    this.summonerService.getSummonerByName(name).subscribe(summoner => this.summoner = summoner)
+    this.summonerService.getSummonerByName(name).subscribe(summoner => {
+      this.summoner = summoner
+      this.rankTier = this.summoner.tier + " " + this.summoner.rank
+    })
   }
 
 }
