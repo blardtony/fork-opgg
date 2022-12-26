@@ -12,6 +12,7 @@ import { ProfileCardComponent } from './atoms/profile-card/profile-card.componen
 import {SummonerService} from "./service/summoner.service";
 import {HttpClientModule} from "@angular/common/http";
 import { MatchCardComponent } from './atoms/match-card/match-card.component';
+import { MatchesComponent } from './component/matches/matches.component';
 
 @NgModule({
   declarations: [
@@ -21,6 +22,7 @@ import { MatchCardComponent } from './atoms/match-card/match-card.component';
     ProfileComponent,
     ProfileCardComponent,
     MatchCardComponent,
+    MatchesComponent,
   ],
   imports: [
     BrowserModule,

@@ -8,6 +8,4 @@
   <app-profile-card [tier]="rankTier" [lp]="lp" [imgPath]="imgPath"></app-profile-card>
 </div>
 
-<div *ngFor="let match of matches">
-  <app-match-card [match]="match"></app-match-card>
-</div>
+<app-matches [matches]="matches"></app-matches>
