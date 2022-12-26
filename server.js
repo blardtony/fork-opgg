@@ -208,20 +208,21 @@ async function getInfoMatchById(req, res) {
     }
     const jsonRiot = await resRiot.json();
     console.log(jsonRiot.info)
+    if (jsonRiot.info !== undefined) {
+      const matchModel = new modelMatch({
+        matchId: id,
+        gameCreation: jsonRiot.info.gameCreation,
+        gameDuration: jsonRiot.info.gameDuration,
+        gameEndTimestamp: jsonRiot.info.gameEndTimestamp,
+        gameId: jsonRiot.info.gameId,
+        gameMode: jsonRiot.info.gameMode,
+        gameName: jsonRiot.info.gameName,
+        gameType: jsonRiot.info.gameType
+      })
 
-    const matchModel = new modelMatch({
-      matchId: id,
-      gameCreation: jsonRiot.info.gameCreation,
-      gameDuration: jsonRiot.info.gameDuration,
-      gameEndTimestamp: jsonRiot.info.gameEndTimestamp,
-      gameId: jsonRiot.info.gameId,
-      gameMode: jsonRiot.info.gameMode,
-      gameName: jsonRiot.info.gameName,
-      gameType: jsonRiot.info.gameType
-    })
-
-    res.status(200).json(matchModel)
-    await matchModel.save()
+      res.status(200).json(matchModel)
+      await matchModel.save()
+    }
     return
   }
   res.status(200).json(match)
