@@ -1,0 +1,14 @@
+<div *ngIf="match !== undefined" class="p-8 bg-gray-700 text-white rounded m-4 flex justify-between">
+  <div>
+    <div>
+      {{match.gameMode}}
+    </div>
+    <div>
+      {{ getTimeGameByDuration(match.gameDuration)}}
+    </div>
+  </div>
+  <div>
+    <span>La partie a durée : </span>
+    {{getDate(match.gameCreation)}}
+  </div>
+</div>
