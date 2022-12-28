@@ -16,9 +16,7 @@ export class SearchBarComponent {
   constructor(private router: Router, private activatedRoute: ActivatedRoute) { }
   get name() { return this.formNameSummoners.get('name'); }
   onSubmit() {
-    console.log(this.formNameSummoners.valid)
     if (this.formNameSummoners.valid) {
-      console.log(this.name?.value)
       this.router.navigate(['/summoner/'+ this.name?.value]).then(res => console.log(res)).catch(e => console.log("error " + e))
     }
   }
