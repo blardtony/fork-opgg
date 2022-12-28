@@ -1,11 +1,20 @@
-<div class="header-profile py-6">
-  <div class="text-4xl font-bold text-center">
-    Profil de {{ summoner?.name }}
+<div *ngIf="errorMessage" class="text-center mt-5 font-bold">
+  <div class="text-2xl">
+    {{errorMessage}}
   </div>
+
 </div>
 
-<div>
-  <app-profile-card [tier]="rankTier" [lp]="lp" [imgPath]="imgPath"></app-profile-card>
-</div>
+<div *ngIf="!errorMessage">
+  <div class="header-profile py-6">
+    <div class="text-4xl font-bold text-center">
+      Profil de {{ summoner?.name }}
+    </div>
+  </div>
 
-<app-matches [matches]="matches"></app-matches>
+  <div>
+    <app-profile-card [tier]="rankTier" [lp]="lp" [imgPath]="imgPath"></app-profile-card>
+  </div>
+
+  <app-matches [matches]="matches"></app-matches>
+</div>

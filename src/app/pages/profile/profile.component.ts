@@ -3,6 +3,7 @@ import {SummonerService} from "../../service/summoner.service";
 import {Summoner} from "../../models/summoner.model";
 import {ActivatedRoute} from "@angular/router";
 import {Match} from "../../models/match.model";
+import {catchError} from "rxjs";
 
 @Component({
   selector: 'app-profile',
@@ -17,7 +18,8 @@ export class ProfileComponent implements OnInit {
   summoner : Summoner | null;
   matchesId : any
   matches: Array<Match>
-
+  notFound: boolean
+  errorMessage: string;
   constructor(private summonerService : SummonerService, private route: ActivatedRoute) {
     this.rankTier = "";
     this.lp = 0;
@@ -25,10 +27,19 @@ export class ProfileComponent implements OnInit {
     this.matchesId = []
     this.matches = []
     this.summoner = null;
+    this.notFound = false
+    this.errorMessage = ""
   }
   ngOnInit(): void {
     const name: string = this.route.snapshot.params['name'];
-    this.summonerService.getSummonerByName(name).subscribe(summoner => {
+    this.summonerService.getSummonerByName(name).pipe(
+      catchError(err => {
+          this.errorMessage = "Le profil du summoner " + name +" n'existe pas !";
+          console.log(err)
+        return [];
+      })
+    )
+      .subscribe(summoner => {
       this.summoner = summoner
       this.rankTier = this.summoner.tier + " " + this.summoner.rank
       this.lp = this.summoner.leaguePoints
