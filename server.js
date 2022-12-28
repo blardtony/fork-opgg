@@ -171,22 +171,27 @@ async function getRankById(id) {
 
 async function getMatchesBySummonerPuuid(req, res) {
   const puuid = req.params.puuid;
-  const resRiot = await fetch(
-    process.env.URL_RIOT_MATCHES_BY_PUUID +
-    puuid +
-    "/ids?start=0&count=20&api_key=" +
-    process.env.API_KEY_RIOT
-  );
-  const jsonRiot = await resRiot.json();
-  if (resRiot.status === 200) {
-    res.status(200).json(jsonRiot)
-    return
+  try {
+    const resRiot = await fetch(
+      process.env.URL_RIOT_MATCHES_BY_PUUID +
+      puuid +
+      "/ids?start=0&count=20&api_key=" +
+      process.env.API_KEY_RIOT
+    );
+    const jsonRiot = await resRiot.json();
+    if (resRiot.status === 200) {
+      res.status(200).json(jsonRiot)
+      return
+    }
+    if (jsonRiot.status === 404) {
+      res.status(404).json({message: "Not found"})
+    }
+    if (jsonRiot.status>= 400) {
+      res.status(jsonRiot.status).json({message: jsonRiot.body.message})
+    }
+  } catch (e) {
+    res.status(500).json({message: e.getMessage()})
   }
-  if (res.status === 404) {
-    res.status(404).json({message: "Not found"})
-    return
-  }
-  res.status(500).json({message: "Error"})
 }
 
 async function getInfoMatchById(req, res) {
