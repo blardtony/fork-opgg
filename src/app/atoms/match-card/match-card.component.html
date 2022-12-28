@@ -1,0 +1,16 @@
+<div *ngIf="match !== undefined" class="p-8 bg-gray-700 text-white rounded my-4 flex justify-between items-center">
+  <div>
+    <div>
+      <span>Mode de jeu : </span>
+      <span class="font-bold">{{match.gameMode}}</span>
+    </div>
+    <div>
+      <span>Durée : </span>
+      <span class="font-bold">{{ getTimeGameByDuration(match.gameDuration)}}</span>
+    </div>
+  </div>
+  <div>
+    <span>La partie s'est déroulé le : </span>
+    {{getDate(match.gameCreation)}}
+  </div>
+</div>

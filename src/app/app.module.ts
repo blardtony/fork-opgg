@@ -11,6 +11,8 @@ import { ProfileComponent } from './pages/profile/profile.component';
 import { ProfileCardComponent } from './atoms/profile-card/profile-card.component';
 import {SummonerService} from "./service/summoner.service";
 import {HttpClientModule} from "@angular/common/http";
+import { MatchCardComponent } from './atoms/match-card/match-card.component';
+import { MatchesComponent } from './component/matches/matches.component';
 
 @NgModule({
   declarations: [
@@ -19,6 +21,8 @@ import {HttpClientModule} from "@angular/common/http";
     SearchBarComponent,
     ProfileComponent,
     ProfileCardComponent,
+    MatchCardComponent,
+    MatchesComponent,
   ],
   imports: [
     BrowserModule,

@@ -29,7 +29,7 @@ mongoose.connect(process.env.URL_DB, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
-
+const router = express.Router();
 const db = mongoose.connection;
 
 db.on("error", (error) => console.error(error));
@@ -90,7 +90,19 @@ const schemaSummoner = new mongoose.Schema({
   }
 });
 
+const schemaMatch = new mongoose.Schema({
+  matchId: String,
+  gameCreation: Number,
+  gameDuration: Number,
+  gameEndTimestamp: Number,
+  gameId: Number,
+  gameMode: String,
+  gameName: String,
+  gameType: String
+});
+
 const modelSummoner = mongoose.model("Summoner", schemaSummoner, "Summoner");
+const modelMatch = mongoose.model("Match", schemaMatch, "Match")
 
 async function getSummonerByName(req, res) {
   try {
@@ -154,13 +166,82 @@ async function getRankById(id) {
     console.log(err)
     return err
   }
-
 }
 
-app.get("/api/summoner/:name", getSummonerByName);
+
+async function getMatchesBySummonerPuuid(req, res) {
+  const puuid = req.params.puuid;
+  try {
+    const resRiot = await fetch(
+      process.env.URL_RIOT_MATCHES_BY_PUUID +
+      puuid +
+      "/ids?start=0&count=20&api_key=" +
+      process.env.API_KEY_RIOT
+    );
+    const jsonRiot = await resRiot.json();
+    if (resRiot.status === 200) {
+      res.status(200).json(jsonRiot)
+      return
+    }
+    if (jsonRiot.status === 404) {
+      res.status(404).json({message: "Not found"})
+    }
+    if (jsonRiot.status>= 400) {
+      res.status(jsonRiot.status).json({message: jsonRiot.body.message})
+    }
+  } catch (e) {
+    res.status(500).json({message: e.getMessage()})
+  }
+}
+
+async function getInfoMatchById(req, res) {
+  const id = req.params.id;
+  let match = null;
+  await modelMatch.collection.findOne({ matchId: id }).then((res) => {
+    match = res;
+  });
+  if (match === null) {
+    const resRiot = await fetch(
+      process.env.URL_RIOT_MATCH_BY_ID +
+      id +
+      "?api_key=" +
+      process.env.API_KEY_RIOT
+    );
+    if (resRiot.status === 404) {
+      res.status(404).json({message: "Not found"});
+      return
+    }
+    const jsonRiot = await resRiot.json();
+    console.log(jsonRiot.info)
+    if (jsonRiot.info !== undefined) {
+      const matchModel = new modelMatch({
+        matchId: id,
+        gameCreation: jsonRiot.info.gameCreation,
+        gameDuration: jsonRiot.info.gameDuration,
+        gameEndTimestamp: jsonRiot.info.gameEndTimestamp,
+        gameId: jsonRiot.info.gameId,
+        gameMode: jsonRiot.info.gameMode,
+        gameName: jsonRiot.info.gameName,
+        gameType: jsonRiot.info.gameType
+      })
+
+      res.status(200).json(matchModel)
+      await matchModel.save()
+    }
+    return
+  }
+  res.status(200).json(match)
+}
+
+router.get("/summoner/:name", getSummonerByName);
+
+router.get("/summoner/:puuid/matches", getMatchesBySummonerPuuid);
+
+router.get("/matches/:id", getInfoMatchById);
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port} http://localhost:${port}`);
 });
 
 app.use(express.json());
+app.use('/api', router);
