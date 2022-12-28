@@ -34,11 +34,9 @@ export class ProfileComponent implements OnInit {
       this.lp = this.summoner.leaguePoints
       this.summonerService.getAllMatchsId(this.summoner.puuid).subscribe(matches => {
         this.matchesId = matches;
-        console.log(this.matchesId)
         this.matchesId.forEach((matchId : string) => {
           this.summonerService.getMatchInfoById(matchId).subscribe(match => {
             this.matches.push(match)
-            console.log(this.matches)
           })
         })
       })

@@ -1,10 +1,12 @@
-<div *ngIf="match !== undefined" class="p-8 bg-gray-700 text-white rounded m-4 flex justify-between items-center">
+<div *ngIf="match !== undefined" class="p-8 bg-gray-700 text-white rounded my-4 flex justify-between items-center">
   <div>
     <div>
-      {{match.gameMode}}
+      <span>Mode de jeu : </span>
+      <span class="font-bold">{{match.gameMode}}</span>
     </div>
     <div>
-      {{ getTimeGameByDuration(match.gameDuration)}}
+      <span>Durée : </span>
+      <span class="font-bold">{{ getTimeGameByDuration(match.gameDuration)}}</span>
     </div>
   </div>
   <div>
