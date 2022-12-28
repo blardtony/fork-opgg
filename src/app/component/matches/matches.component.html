@@ -1,3 +1,7 @@
-<div *ngFor="let match of matches">
+
+
+<button type="button" (click)="orderByDate(this.asc)">Order by date</button>
+
+<div *ngFor="let match of filteredMatches">
   <app-match-card [match]="match"></app-match-card>
 </div>
