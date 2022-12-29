@@ -1,5 +1,6 @@
-<div class="rounded shadow-md sm:flex sm:items-center sm:space-x-8 max-w-sm">
+<div class="rounded shadow-md sm:flex sm:items-center sm:space-x-8 max-w-md p-4">
   <img
+    *ngIf="imgPath!==''"
     alt="Icon tier"
     src="{{imgPath}}"
     class="h-48 w-48 mx-auto sm:mx-0 sm:shrink-0"
