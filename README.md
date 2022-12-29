@@ -27,7 +27,7 @@ Voici les noms des joueurs pour les tests :
 - agurin
 
 Voici un nom de joueur non présent :
--testexistepas
+- testexistepas
 
 Voici les noms des joueurs qui ont plusieurs mode de jeu dans les matchs :
 - turbointersenpai : les modes de jeu sont **aram** et **classic**
