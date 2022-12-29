@@ -127,7 +127,6 @@ async function getSummonerByName(req, res) {
           const jsonRiot = await resRiot.json();
           jsonRiot.name = jsonRiot.name.toLowerCase();
           const summonerLeagueDetail = await getRankById(jsonRiot.id);
-          console.log(summonerLeagueDetail);
           const summonerRanked5vs5 = summonerLeagueDetail.find(({queueType}) => queueType === "RANKED_SOLO_5x5")
 
           const checkSummonerRanked = (summonerRanked5vs5 !== undefined && summonerRanked5vs5.length !== 0)
@@ -154,7 +153,6 @@ async function getSummonerByName(req, res) {
 
 async function getRankById(id) {
   try {
-    console.log(id)
     const resRiot = await fetch(
       process.env.URL_RIOT_RANK_BY_ID +
       id +
@@ -163,7 +161,7 @@ async function getRankById(id) {
     );
     return await resRiot.json()
   } catch (err) {
-    console.log(err)
+    console.error(err)
     return err
   }
 }
@@ -212,7 +210,6 @@ async function getInfoMatchById(req, res) {
       return
     }
     const jsonRiot = await resRiot.json();
-    console.log(jsonRiot.info)
     if (jsonRiot.info !== undefined) {
       const matchModel = new modelMatch({
         matchId: id,
