@@ -7,7 +7,7 @@ Lancer la commande suivante lors de l'installation du projet
 ```bash
 npm install
 ```
-## Front
+## Serveur
 Pour lancer le serveur Front il faut taper la commande
 ```bash
 ng serve
